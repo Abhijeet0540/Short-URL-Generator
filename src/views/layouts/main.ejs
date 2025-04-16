@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>
+    <%= typeof title !=='undefined' ? title : 'URL Shortener' %>
+  </title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/fontawesome/css/all.min.css" />
+
+  <!-- Tailwind CSS -->
+  <link rel="stylesheet" href="/css/output.css" />
+
+  <!-- Custom Styles -->
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #000;
+      background-image:
+        radial-gradient(circle at 20% 35%, rgba(76, 29, 149, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 75% 44%, rgba(124, 58, 237, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 50% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+      background-size: cover;
+      background-attachment: fixed;
+      color: #fff;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      border-radius: 0.75rem;
+    }
+
+    .gradient-border {
+      position: relative;
+      border-radius: 0.75rem;
+      overflow: hidden;
+    }
+
+    .gradient-border::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, #8b5cf6, #3b82f6, #ec4899);
+      z-index: -1;
+      border-radius: 0.85rem;
+      animation: animatedgradient 3s ease alternate infinite;
+      background-size: 300% 300%;
+    }
+
+    @keyframes animatedgradient {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    .glow-button {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .glow-button::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 70%);
+      opacity: 0;
+      transform: scale(0.5);
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .glow-button:hover::after {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .toast {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 50;
+      transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    }
+
+    .toast.hidden {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+
+    .input-glow:focus {
+      box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+    }
+
+    /* Responsive table styles */
+    @media (max-width: 768px) {
+      .overflow-x-auto {
+        -webkit-overflow-scrolling: touch;
+      }
+
+      table {
+        width: 100%;
+        display: table;
+      }
+    }
+  </style>
+</head>
+
+<body class="h-full min-h-screen transition-colors duration-300">
+
+  <!-- Header -->
+  <header class="glass-card mb-6">
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16 items-center">
+        <div class="flex items-center">
+          <a href="/" class="text-white font-bold text-xl flex items-center">
+            <i class="fas fa-link mr-2 text-purple-400"></i>URL Shortener
+          </a>
+          <div class="hidden sm:ml-6 sm:flex sm:space-x-8 ml-10">
+            <a href="/"
+              class="border-purple-500 text-white inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+              Home
+            </a>
+            <a href="/api/urls/dashboard"
+              class="border-transparent text-gray-300 hover:border-purple-300 hover:text-white inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+              Dashboard
+            </a>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-4">
+          <button id="darkModeToggle" class="p-2 rounded-full text-gray-300 hover:text-white focus:outline-none">
+            <i class="fas fa-moon dark:hidden"></i>
+            <i class="fas fa-sun hidden dark:block"></i>
+          </button>
+          <a href="/api/urls/dashboard"
+            class="bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:from-purple-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 glow-button">
+            <i class="fas fa-chart-bar mr-1"></i> Dashboard
+          </a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <%- body %>
+  </main>
+
+  <!-- Footer -->
+  <footer class="glass-card mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <p class="text-center text-gray-300 text-sm">
+        &copy; <%= new Date().getFullYear() %> URL Shortener. All rights reserved.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Toast: Success -->
+  <% if (typeof success !=='undefined' ) { %>
+    <div id="successToast" class="toast glass-card border-l-4 border-green-500 text-white p-4 rounded shadow-md">
+      <div class="flex items-start">
+        <i class="fas fa-check-circle mt-1 text-green-400"></i>
+        <div class="ml-3">
+          <p class="text-sm font-medium">
+            <%= success %>
+          </p>
+        </div>
+        <button class="toast-close ml-auto pl-3 p-1.5 text-gray-300 hover:text-white rounded-md focus:outline-none">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+    <% } %>
+
+      <!-- Toast: Error -->
+      <% if (typeof error !=='undefined' ) { %>
+        <div id="errorToast" class="toast glass-card border-l-4 border-red-500 text-white p-4 rounded shadow-md">
+          <div class="flex items-start">
+            <i class="fas fa-exclamation-circle mt-1 text-red-400"></i>
+            <div class="ml-3">
+              <p class="text-sm font-medium">
+                <%= error %>
+              </p>
+            </div>
+            <button class="toast-close ml-auto pl-3 p-1.5 text-gray-300 hover:text-white rounded-md focus:outline-none">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+        <% } %>
+
+          <!-- Scripts -->
+          <script>
+            // Theme init
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const storedTheme = localStorage.getItem('darkMode');
+            const isDark = storedTheme === 'true' || (storedTheme === null && prefersDark);
+            document.documentElement.classList.toggle('dark', isDark);
+
+            // Toggle dark mode
+            darkModeToggle.addEventListener('click', () => {
+              const isNowDark = document.documentElement.classList.toggle('dark');
+              localStorage.setItem('darkMode', isNowDark);
+            });
+
+            // Toast close
+            document.querySelectorAll('.toast-close').forEach(button => {
+              button.addEventListener('click', () => {
+                const toast = button.closest('.toast');
+                toast.classList.add('hidden');
+                setTimeout(() => toast.remove(), 300);
+              });
+            });
+
+            // Auto-hide toasts
+            document.querySelectorAll('.toast').forEach(toast => {
+              setTimeout(() => {
+                toast.classList.add('hidden');
+                setTimeout(() => toast.remove(), 300);
+              }, 5000);
+            });
+          </script>
+</body>
+
+</html>

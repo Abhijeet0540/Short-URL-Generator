@@ -1,0 +1,146 @@
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-0">
+  <div class="text-center mb-12 animate-fade-in">
+    <h1 class="text-5xl font-extrabold text-white mb-4 tracking-tight">
+      <i class="fas fa-link text-purple-400 mr-2"></i>Shorten URLs Easily
+    </h1>
+    <p class="text-lg text-gray-300 max-w-md mx-auto">
+      Paste your long URL and get a sleek, easy-to-share short link.
+    </p>
+  </div>
+
+  <div class="flex flex-col md:flex-row gap-8">
+    <!-- Image Section -->
+    <div class="hidden md:flex w-2/5 justify-center items-center">
+      <img src="https://via.placeholder.com/400x500/000000/FFFFFF/?text=URL+Shortener" alt="URL Shortener"
+        class="rounded-xl shadow-2xl w-full max-w-xs object-cover">
+    </div>
+
+    <!-- Form Section -->
+    <div class="w-full md:w-3/5">
+      <div class="bg-black/30 border border-gray-700 backdrop-blur-md rounded-xl p-6 shadow-xl animate-slide-up">
+        <h2 class="text-3xl font-semibold text-white mb-6">Welcome Back 👋</h2>
+        <form action="/api/urls/shorten" method="POST" class="space-y-6">
+
+          <!-- Long URL -->
+          <div>
+            <label for="originalUrl" class="block text-sm font-medium text-gray-300 mb-1">
+              Enter your long URL
+            </label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-3 flex items-center text-purple-400">
+                <i class="fas fa-globe"></i>
+              </span>
+              <input type="url" id="originalUrl" name="originalUrl"
+                class="pl-10 w-full bg-black/30 border border-gray-600 rounded-md text-white text-sm py-2.5 px-3 placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+                placeholder="https://yourdomain.com/super/long/url/path"
+                value="<%= typeof originalUrl !== 'undefined' ? originalUrl : '' %>" required>
+            </div>
+          </div>
+
+          <!-- Custom Code -->
+          <div>
+            <label for="customCode" class="block text-sm font-medium text-gray-300 mb-1">
+              Custom short code (optional)
+            </label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-3 flex items-center text-purple-400">
+                <i class="fas fa-tag"></i>
+              </span>
+              <input type="text" id="customCode" name="customCode"
+                class="pl-10 w-full bg-black/30 border border-gray-600 rounded-md text-white text-sm py-2.5 px-3 placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+                placeholder="custom-code" pattern="[a-zA-Z0-9-_]+"
+                title="Only letters, numbers, hyphens, and underscores are allowed">
+            </div>
+            <p class="mt-1 text-xs text-gray-400">
+              Leave empty to auto-generate. Custom codes must use only letters, numbers, hyphens, or underscores.
+            </p>
+          </div>
+
+          <!-- Submit -->
+          <div>
+            <button type="submit"
+              class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-medium py-3 rounded-md shadow-lg transition-all duration-200 text-sm tracking-wide">
+              <i class="fas fa-cut mr-2"></i>Shorten URL
+            </button>
+          </div>
+
+          <!-- Social Icons (Optional) -->
+          <div class="flex justify-center gap-4 pt-4">
+            <button type="button" class="text-gray-300 hover:text-white text-xl">
+              <i class="fab fa-google"></i>
+            </button>
+            <button type="button" class="text-gray-300 hover:text-white text-xl">
+              <i class="fab fa-apple"></i>
+            </button>
+            <button type="button" class="text-gray-300 hover:text-white text-xl">
+              <i class="fab fa-facebook"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Result Section -->
+  <% if (typeof shortUrl !=='undefined' ) { %>
+    <div class="bg-black/30 border border-gray-700 backdrop-blur-md rounded-xl p-6 mt-10 shadow-xl animate-slide-up">
+      <h2 class="text-2xl font-semibold text-white mb-4">Your Short Link</h2>
+
+      <div class="mb-6">
+        <label for="shortUrl" class="block text-sm font-medium text-gray-300 mb-1">Copy and share:</label>
+        <div class="relative">
+          <input type="text" id="shortUrl"
+            class="w-full bg-black/30 border border-gray-600 rounded-md text-white text-sm py-2.5 px-3 pr-10 placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+            value="<%= shortUrl %>" readonly />
+          <button id="copyButton" type="button"
+            class="absolute inset-y-0 right-3 text-purple-400 hover:text-purple-300 text-lg">
+            <i class="fas fa-copy"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-4">
+        <a href="<%= shortUrl %>" target="_blank"
+          class="flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white py-2.5 rounded-md text-center font-medium transition-all duration-200">
+          <i class="fas fa-external-link-alt mr-2"></i>Open Link
+        </a>
+        <a href="/api/urls/dashboard"
+          class="flex-1 bg-black/40 border border-gray-600 text-gray-300 hover:text-white py-2.5 rounded-md text-center font-medium transition-all duration-200">
+          <i class="fas fa-chart-bar mr-2"></i>View Analytics
+        </a>
+      </div>
+    </div>
+    <% } %>
+</div>
+
+<script>
+  // Copy short URL
+  const copyButton = document.getElementById('copyButton');
+  if (copyButton) {
+    copyButton.addEventListener('click', () => {
+      const shortUrlInput = document.getElementById('shortUrl');
+      shortUrlInput.select();
+      document.execCommand('copy');
+
+      // Feedback
+      const original = copyButton.innerHTML;
+      copyButton.innerHTML = '<i class="fas fa-check"></i>';
+      setTimeout(() => copyButton.innerHTML = original, 2000);
+
+      // Toast
+      const toast = document.createElement('div');
+      toast.className = 'toast bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded shadow-md';
+      toast.innerHTML = `
+        <div class="flex">
+          <i class="fas fa-check-circle mt-1 mr-2"></i>
+          <p class="text-sm font-medium">Copied to clipboard!</p>
+        </div>
+      `;
+      document.body.appendChild(toast);
+      setTimeout(() => {
+        toast.classList.add('hidden');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    });
+  }
+</script>

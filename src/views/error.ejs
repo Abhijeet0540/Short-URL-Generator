@@ -1,0 +1,16 @@
+<div class="max-w-3xl mx-auto text-center py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
+  <div class="animate-fade-in">
+    <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white sm:text-5xl">
+      <span class="block text-red-600 dark:text-red-400">Error</span>
+      <span class="block">Something went wrong</span>
+    </h1>
+    <p class="mt-4 text-lg text-gray-500 dark:text-gray-400">
+      <%= typeof message !== 'undefined' ? message : 'An unexpected error occurred. Please try again later.' %>
+    </p>
+    <div class="mt-10">
+      <a href="/" class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+        <i class="fas fa-home mr-2"></i> Go back home
+      </a>
+    </div>
+  </div>
+</div>

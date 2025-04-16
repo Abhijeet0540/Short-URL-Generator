@@ -1,0 +1,38 @@
+{
+  "name": "mysql_connection-curd",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "concurrently \"nodemon server.js\" \"npm run watch-css\"",
+    "build-css": "node build-css.js",
+    "watch-css": "nodemon -e css --watch public/css/styles.css --exec \"npm run build-css\"",
+    "setup-db": "node src/config/setupDb.js",
+    "setup": "npm run setup-db && npm run build-css"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.7.2",
+    "@tailwindcss/postcss": "^4.1.4",
+    "autoprefixer": "^10.4.21",
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.5.0",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-ejs-layouts": "^2.5.1",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.14.0",
+    "nanoid": "^5.1.5",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.1.4"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
